@@ -148,7 +148,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   child: ClipOval(
                     child: Image.asset(
-                      'assets/images/logo.png',
+                      'assets/images/logo.png', //logo image
                       width: 88,
                       height: 88,
                       fit: BoxFit.cover,
