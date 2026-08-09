@@ -129,39 +129,25 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Widget _buildHeader() {
     return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 40),
+        padding: const EdgeInsets.symmetric(vertical: 30),
         decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
         child: Stack(
           alignment: Alignment.center,
           children: [
             Column(
               children: [
-                Container(
+                Image.asset(
+                  'assets/images/logo.png',
                   width: 88,
                   height: 88,
-                  decoration: const BoxDecoration(
-                    color: AppColors.headerIconBg,
-                    shape: BoxShape.circle,
-                  ),
-                  child: ClipOval(
-                    child: Image.asset(
-                      'assets/images/logo.png', //logo image
-                      width: 88,
-                      height: 88,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  fit: BoxFit.contain,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 6),
                 const Text('PurrClean', style: AppTextStyles.appTitle),
                 const SizedBox(height: 8),
-                const Text(
-                  'Smart Litter Box Monitoring',
-                  style: AppTextStyles.appSubtitle,
-                ),
               ],
             ),
           ],
@@ -216,7 +202,7 @@ class _AuthScreenState extends State<AuthScreen> {
         children: [
           CustomTextField(
             label: 'Email',
-            hint: 'you@example.com',
+            hint: '',
             icon: Icons.alternate_email,
             controller: _loginEmailController,
             keyboardType: TextInputType.emailAddress,
@@ -225,7 +211,7 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           CustomTextField(
             label: 'Password',
-            hint: '••••••••',
+            hint: '',
             icon: Icons.lock_outline,
             controller: _loginPasswordController,
             obscureText: true,
@@ -235,11 +221,6 @@ class _AuthScreenState extends State<AuthScreen> {
           const SizedBox(height: 8),
           _buildSubmitButton('Sign In', _handleLogin),
           const SizedBox(height: 16),
-          const Text(
-            'Demo account: demo@purrclean.com / demo1234',
-            style: AppTextStyles.helperText,
-            textAlign: TextAlign.center,
-          ),
         ],
       ),
     );
@@ -253,7 +234,7 @@ class _AuthScreenState extends State<AuthScreen> {
         children: [
           CustomTextField(
             label: 'Full Name',
-            hint: 'John Doe',
+            hint: '',
             icon: Icons.person_outline,
             controller: _fullNameController,
             validator: (v) =>
@@ -261,7 +242,7 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           CustomTextField(
             label: 'Email',
-            hint: 'you@example.com',
+            hint: '',
             icon: Icons.alternate_email,
             controller: _registerEmailController,
             keyboardType: TextInputType.emailAddress,
@@ -270,7 +251,7 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           CustomTextField(
             label: 'Password',
-            hint: '••••••••',
+            hint: '',
             icon: Icons.lock_outline,
             controller: _registerPasswordController,
             obscureText: true,

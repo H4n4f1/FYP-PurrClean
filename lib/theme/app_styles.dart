@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Central place for all colors, text styles, and shared decoration values
-/// used across the PurrClean UI. This is the closest Flutter equivalent to
-/// a CSS stylesheet — pull new colors/styles out here as the app grows,
-/// instead of hardcoding them inside widgets.
 class AppColors {
   AppColors._();
 
@@ -26,20 +22,21 @@ class AppTextStyles {
   AppTextStyles._();
 
   static const appTitle = TextStyle(
-    fontSize: 38,
+    fontFamily: 'ComicRelief',
+    fontSize: 50,
     fontWeight: FontWeight.bold,
     color: Colors.white,
   );
 
-  static const appSubtitle = TextStyle(fontSize: 16, color: Colors.white);
-
-  static const fieldLabel = TextStyle(
-    fontSize: 15,
+  static final fieldLabel = TextStyle(
+    fontFamily: 'ComicRelief',
+    fontSize: 20,
     fontWeight: FontWeight.w600,
     color: AppColors.textDark,
   );
 
   static const buttonLabel = TextStyle(
+    fontFamily: 'ComicRelief',
     fontSize: 17,
     fontWeight: FontWeight.bold,
     color: Colors.white,
