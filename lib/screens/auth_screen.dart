@@ -177,7 +177,7 @@ class _AuthScreenState extends State<AuthScreen> {
     return GestureDetector(
       onTap: () => setState(() => isLogin = label == 'Login'),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 250),
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: selected ? AppColors.primaryGradient : null,
