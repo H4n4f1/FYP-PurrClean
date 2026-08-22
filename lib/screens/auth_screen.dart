@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../theme/app_styles.dart';
 import '../widgets/custom_text_field.dart';
+import 'home_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -51,10 +52,10 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() => isLoading = false);
 
     if (result.success) {
-      // TODO: Navigate to your home/dashboard screen and store result.token.
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Login successful!')));
+      // TODO: Store result.token once your backend issues real auth tokens.
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result.errorMessage ?? 'Login failed')),

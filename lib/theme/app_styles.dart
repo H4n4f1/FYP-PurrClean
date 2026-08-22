@@ -9,12 +9,54 @@ class AppColors {
   static const toggleTrack = Color(0xFFFCE9C7);
   static const inputFill = Color(0xFFF2F2F4);
   static const textDark = Color(0xFF1E2A44);
+  static const textGrey = Color(0xFF8A8FA3);
   static const headerIconBg = Color(0xFFFFF8EF);
+
+  // Home dashboard palette
+  static const iconBgOrange = Color(0xFFFCE3C6);
+  static const iconBgYellow = Color(0xFFFCE9C7);
+  static const iconBgBlue = Color(0xFFDCEAFB);
+  static const alertBell = Color(0xFFEF6C3A);
+  static const successGreen = Color(0xFF3EBD6A);
+  static const infoBlue = Color(0xFF3D6BE0);
+  static const moderatePillBg = Color(0xFFFBD98A);
+  static const moderatePillText = Color(0xFF8A6300);
+  static const barTrack = Color(0xFFE9E9ED);
+  static const manualPillBg = Color(0xFFECECF2);
+  static const manualPillText = Color(0xFF4B5563);
 
   static const primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [primaryLight, primary],
+  );
+
+  // Auto mode toggle button (blue -> teal)
+  static const fanGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [Color(0xFF3D6BE0), Color(0xFF1FC1C7)],
+  );
+
+  // Manual mode toggle button (orange, matches primary palette)
+  static const manualGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [primary, primaryLight],
+  );
+
+  // "Start Fan" manual-control button
+  static const startGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [Color(0xFF22C55E), Color(0xFF0D9488)],
+  );
+
+  // "Stop Fan" manual-control button
+  static const stopGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [Color(0xFFEF4444), Color(0xFFF97316)],
   );
 }
 
@@ -36,7 +78,6 @@ class AppTextStyles {
   );
 
   static const buttonLabel = TextStyle(
-    fontFamily: 'ComicRelief',
     fontSize: 17,
     fontWeight: FontWeight.bold,
     color: Colors.white,
@@ -53,6 +94,26 @@ class AppTextStyles {
   );
 
   static const helperText = TextStyle(color: Colors.grey, fontSize: 13);
+
+  static const cardTitle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AppColors.textDark,
+  );
+
+  static const statLabel = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textDark,
+  );
+
+  static const statValue = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: AppColors.primary,
+  );
+
+  static const timestamp = TextStyle(fontSize: 12, color: AppColors.textGrey);
 }
 
 class AppDecorations {
