@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1019192960498",
+    "project_id": "purrclean-124",
+    "storage_bucket": "purrclean-124.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019192960498:android:22259b3fc892ea28bcf76b",
+        "android_client_info": {
+          "package_name": "com.swe124.purrclean_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1019192960498-5sjpgej0eesbc67ulrkcivs7tueastoq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRxArFHDJGBScgt0hiGRq6Q4tF--dLSWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019192960498-5sjpgej0eesbc67ulrkcivs7tueastoq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1019192960498-iqnq79ogajr26epio9c3phiv4lk49r1k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.purrcleanTest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

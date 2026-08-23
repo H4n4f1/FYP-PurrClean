@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../services/auth_service.dart';
 import '../theme/app_styles.dart';
 import '../widgets/custom_text_field.dart';
@@ -12,22 +13,17 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  bool isLogin = true;
-  bool isLoading = false;
-
+  final _authService = FirebaseAuthService();
   final _loginFormKey = GlobalKey<FormState>();
   final _registerFormKey = GlobalKey<FormState>();
-
   final _loginEmailController = TextEditingController();
   final _loginPasswordController = TextEditingController();
-
   final _fullNameController = TextEditingController();
   final _registerEmailController = TextEditingController();
   final _registerPasswordController = TextEditingController();
 
-  // 👇 This is the ONLY line you need to change once your backend is ready.
-  // e.g. final AuthService _authService = ApiAuthService();
-  final AuthService _authService = MockAuthService();
+  bool isLogin = true;
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -42,50 +38,44 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<void> _handleLogin() async {
     if (!_loginFormKey.currentState!.validate()) return;
     setState(() => isLoading = true);
-
     final result = await _authService.login(
       email: _loginEmailController.text.trim(),
       password: _loginPasswordController.text,
     );
-
     if (!mounted) return;
     setState(() => isLoading = false);
-
     if (result.success) {
-      // TODO: Store result.token once your backend issues real auth tokens.
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
+      _openHome();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.errorMessage ?? 'Login failed')),
-      );
+      _showMessage(result.errorMessage ?? 'Login failed.');
     }
   }
 
   Future<void> _handleRegister() async {
     if (!_registerFormKey.currentState!.validate()) return;
     setState(() => isLoading = true);
-
     final result = await _authService.register(
       fullName: _fullNameController.text.trim(),
       email: _registerEmailController.text.trim(),
       password: _registerPasswordController.text,
     );
-
     if (!mounted) return;
     setState(() => isLoading = false);
-
     if (result.success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created! Please sign in.')),
-      );
-      setState(() => isLogin = true);
+      _openHome();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.errorMessage ?? 'Registration failed')),
-      );
+      _showMessage(result.errorMessage ?? 'Registration failed.');
     }
+  }
+
+  void _openHome() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const HomeScreen()),
+    );
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -111,11 +101,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       const SizedBox(height: 24),
                       AnimatedSwitcher(
                         duration: const Duration(milliseconds: 250),
-                        child: isLogin
-                            ? _buildLoginForm(key: const ValueKey('login'))
-                            : _buildRegisterForm(
-                                key: const ValueKey('register'),
-                              ),
+                        child: isLogin ? _buildLoginForm() : _buildRegisterForm(),
                       ),
                     ],
                   ),
@@ -135,22 +121,11 @@ class _AuthScreenState extends State<AuthScreen> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 30),
         decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
-        child: Stack(
-          alignment: Alignment.center,
+        child: Column(
           children: [
-            Column(
-              children: [
-                Image.asset(
-                  'assets/images/logo.png',
-                  width: 88,
-                  height: 88,
-                  fit: BoxFit.contain,
-                ),
-                const SizedBox(height: 6),
-                const Text('PurrClean', style: AppTextStyles.appTitle),
-                const SizedBox(height: 8),
-              ],
-            ),
+            Image.asset('assets/images/logo.png', width: 88, height: 88),
+            const SizedBox(height: 6),
+            const Text('PurrClean', style: AppTextStyles.appTitle),
           ],
         ),
       ),
@@ -195,11 +170,11 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  Widget _buildLoginForm({Key? key}) {
+  Widget _buildLoginForm() {
     return Form(
       key: _loginFormKey,
       child: Column(
-        key: key,
+        key: const ValueKey('login'),
         children: [
           CustomTextField(
             label: 'Email',
@@ -207,8 +182,7 @@ class _AuthScreenState extends State<AuthScreen> {
             icon: Icons.alternate_email,
             controller: _loginEmailController,
             keyboardType: TextInputType.emailAddress,
-            validator: (v) =>
-                (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
+            validator: _emailValidator,
           ),
           CustomTextField(
             label: 'Password',
@@ -216,30 +190,29 @@ class _AuthScreenState extends State<AuthScreen> {
             icon: Icons.lock_outline,
             controller: _loginPasswordController,
             obscureText: true,
-            validator: (v) =>
-                (v == null || v.length < 6) ? 'Min 6 characters' : null,
+            validator: _passwordValidator,
           ),
           const SizedBox(height: 8),
           _buildSubmitButton('Sign In', _handleLogin),
-          const SizedBox(height: 16),
         ],
       ),
     );
   }
 
-  Widget _buildRegisterForm({Key? key}) {
+  Widget _buildRegisterForm() {
     return Form(
       key: _registerFormKey,
       child: Column(
-        key: key,
+        key: const ValueKey('register'),
         children: [
           CustomTextField(
             label: 'Full Name',
             hint: '',
             icon: Icons.person_outline,
             controller: _fullNameController,
-            validator: (v) =>
-                (v == null || v.trim().isEmpty) ? 'Enter your name' : null,
+            validator: (value) => value == null || value.trim().isEmpty
+                ? 'Enter your name'
+                : null,
           ),
           CustomTextField(
             label: 'Email',
@@ -247,8 +220,7 @@ class _AuthScreenState extends State<AuthScreen> {
             icon: Icons.alternate_email,
             controller: _registerEmailController,
             keyboardType: TextInputType.emailAddress,
-            validator: (v) =>
-                (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
+            validator: _emailValidator,
           ),
           CustomTextField(
             label: 'Password',
@@ -256,8 +228,7 @@ class _AuthScreenState extends State<AuthScreen> {
             icon: Icons.lock_outline,
             controller: _registerPasswordController,
             obscureText: true,
-            validator: (v) =>
-                (v == null || v.length < 6) ? 'Min 6 characters' : null,
+            validator: _passwordValidator,
           ),
           const SizedBox(height: 8),
           _buildSubmitButton('Create Account', _handleRegister),
@@ -265,6 +236,12 @@ class _AuthScreenState extends State<AuthScreen> {
       ),
     );
   }
+
+  String? _emailValidator(String? value) =>
+      value == null || !value.contains('@') ? 'Enter a valid email' : null;
+
+  String? _passwordValidator(String? value) =>
+      value == null || value.length < 6 ? 'Min 6 characters' : null;
 
   Widget _buildSubmitButton(String label, VoidCallback onTap) {
     return SizedBox(
@@ -274,19 +251,14 @@ class _AuthScreenState extends State<AuthScreen> {
         onPressed: isLoading ? null : onTap,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: AppDecorations.buttonRadius,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: AppDecorations.buttonRadius),
           elevation: 0,
         ),
         child: isLoading
             ? const SizedBox(
                 width: 22,
                 height: 22,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2.5,
-                ),
+                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
               )
             : Text(label, style: AppTextStyles.buttonLabel),
       ),
