@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../theme/app_styles.dart';
 import '../widgets/custom_text_field.dart';
-import 'home_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -24,6 +23,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   bool isLogin = true;
   bool isLoading = false;
+  bool isGoogleLoading = false;
 
   @override
   void dispose() {
@@ -44,9 +44,7 @@ class _AuthScreenState extends State<AuthScreen> {
     );
     if (!mounted) return;
     setState(() => isLoading = false);
-    if (result.success) {
-      _openHome();
-    } else {
+    if (!result.success) {
       _showMessage(result.errorMessage ?? 'Login failed.');
     }
   }
@@ -54,24 +52,21 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<void> _handleRegister() async {
     if (!_registerFormKey.currentState!.validate()) return;
     setState(() => isLoading = true);
+    final email = _registerEmailController.text.trim();
     final result = await _authService.register(
       fullName: _fullNameController.text.trim(),
-      email: _registerEmailController.text.trim(),
+      email: email,
       password: _registerPasswordController.text,
     );
     if (!mounted) return;
     setState(() => isLoading = false);
-    if (result.success) {
-      _openHome();
-    } else {
+    if (!result.success) {
       _showMessage(result.errorMessage ?? 'Registration failed.');
+    } else {
+      _showMessage(
+        'Verification email sent to $email. Check your inbox or spam folder.',
+      );
     }
-  }
-
-  void _openHome() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
-    );
   }
 
   void _showMessage(String message) {
@@ -194,6 +189,10 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           const SizedBox(height: 8),
           _buildSubmitButton('Sign In', _handleLogin),
+          const SizedBox(height: 16),
+          _buildOrDivider(),
+          const SizedBox(height: 16),
+          _buildGoogleButton(),
         ],
       ),
     );
@@ -232,6 +231,10 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           const SizedBox(height: 8),
           _buildSubmitButton('Create Account', _handleRegister),
+          const SizedBox(height: 16),
+          _buildOrDivider(),
+          const SizedBox(height: 16),
+          _buildGoogleButton(),
         ],
       ),
     );
@@ -244,11 +247,12 @@ class _AuthScreenState extends State<AuthScreen> {
       value == null || value.length < 6 ? 'Min 6 characters' : null;
 
   Widget _buildSubmitButton(String label, VoidCallback onTap) {
+    final isBusy = isLoading || isGoogleLoading;
     return SizedBox(
       width: double.infinity,
       height: 54,
       child: ElevatedButton(
-        onPressed: isLoading ? null : onTap,
+        onPressed: isBusy ? null : onTap,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           shape: RoundedRectangleBorder(borderRadius: AppDecorations.buttonRadius),
@@ -263,5 +267,76 @@ class _AuthScreenState extends State<AuthScreen> {
             : Text(label, style: AppTextStyles.buttonLabel),
       ),
     );
+  }
+
+  Widget _buildOrDivider() {
+    return Row(
+      children: [
+        Expanded(child: Divider(color: Colors.grey.shade300)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Text('OR', style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
+        ),
+        Expanded(child: Divider(color: Colors.grey.shade300)),
+      ],
+    );
+  }
+
+  Widget _buildGoogleButton() {
+    final isBusy = isLoading || isGoogleLoading;
+    return SizedBox(
+      width: double.infinity,
+      height: 54,
+      child: OutlinedButton(
+        onPressed: isBusy ? null : _handleGoogleSignIn,
+        style: OutlinedButton.styleFrom(
+          backgroundColor: Colors.white,
+          side: BorderSide(color: Colors.grey.shade300, width: 1.2),
+          shape: RoundedRectangleBorder(
+            borderRadius: AppDecorations.buttonRadius,
+          ),
+          elevation: 0,
+        ),
+        child: isGoogleLoading
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                  color: AppColors.primary,
+                  strokeWidth: 2.5,
+                ),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    'assets/images/google_logo.png',
+                    width: 22,
+                    height: 22,
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    'Continue with Google',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textDark,
+                    ),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => isGoogleLoading = true);
+    final result = await _authService.signInWithGoogle();
+    if (!mounted) return;
+    setState(() => isGoogleLoading = false);
+    if (!result.success) {
+      _showMessage(result.errorMessage ?? 'Google sign-in failed.');
+    }
   }
 }

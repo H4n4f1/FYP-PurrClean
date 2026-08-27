@@ -77,7 +77,7 @@ class CardHeader extends StatelessWidget {
         RoundIcon(icon: icon, background: iconBg, iconColor: iconColor),
         const SizedBox(width: 12),
         Expanded(child: Text(title, style: AppTextStyles.cardTitle)),
-        if (trailing != null) trailing!,
+        ?trailing,
       ],
     );
   }

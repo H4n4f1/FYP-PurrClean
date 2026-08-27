@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/auth_screen.dart';
+import 'auth_wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFFFF3D6),
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFF8A00)),
       ),
-      home: const AuthScreen(),
+      home: const AuthWrapper(),
     );
   }
 }
