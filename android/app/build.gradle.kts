@@ -10,7 +10,7 @@ plugins {
 android {
     namespace = "com.swe124.purrclean_test"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
