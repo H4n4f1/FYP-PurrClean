@@ -3,6 +3,7 @@ import '../theme/app_styles.dart';
 import '../services/auth_service.dart';
 import '../widgets/dashboard_card.dart';
 import '../widgets/stat_card.dart';
+import 'analytics_screen.dart';
 
 /// Placeholder alert model.
 /// TODO: Replace with your real model / API response once the backend is ready.
@@ -686,7 +687,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             iconColor: AppColors.primary,
             label: 'Analytics',
             onTap: () {
-              // TODO: Navigate to the analytics screen.
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const AnalyticsScreen()),
+              );
             },
           ),
         ),
