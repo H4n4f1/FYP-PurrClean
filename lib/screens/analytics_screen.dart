@@ -301,7 +301,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     final selected = _selectedPeriod == period;
     return GestureDetector(
       onTap: () {
-        // TODO: Fetch analytics data for the newly selected period.
         setState(() => _selectedPeriod = period);
       },
       child: AnimatedContainer(
